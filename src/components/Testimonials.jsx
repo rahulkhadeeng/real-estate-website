@@ -12,7 +12,7 @@ const Testimonials = () => {
             <span className="section-tag">CLIENT VOICES</span>
             <h2 className="section-heading">Trusted by Homeowners & Investors</h2>
             <p className="text-muted mx-auto" style={{ maxWidth: '650px', fontSize: '1.05rem' }}>
-              Hear firsthand from families and institutional buyers who found their dream residences through Grow Infinity Realtors.
+              Hear firsthand from families and institutional buyers who found their dream residences through Keylo.
             </p>
           </div>
         </Reveal>

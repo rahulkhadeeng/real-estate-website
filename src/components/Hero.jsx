@@ -299,7 +299,7 @@ const Hero = ({ onOpenModal }) => {
                         required
                       />
                       <label className="form-check-label small text-muted" htmlFor="heroAuthCheck" style={{ fontSize: '0.72rem', lineHeight: '1.35' }}>
-                        I authorize Grow Infinity Realtors to contact me via Call, SMS & WhatsApp.
+                        I authorize Keylo to contact me via Call, SMS & WhatsApp.
                       </label>
                     </div>
 

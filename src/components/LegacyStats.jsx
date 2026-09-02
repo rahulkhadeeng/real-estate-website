@@ -23,7 +23,7 @@ const LegacyStats = () => {
               More than <span className="text-primary-lux">10 Years</span> of Experience
             </h2>
             <p className="text-muted mx-auto" style={{ maxWidth: '720px', fontSize: '1.05rem', lineHeight: '1.75' }}>
-              Over the years, Grow Infinity Realtors has built an unparalleled reputation for providing a seamless, transparent experience to customers looking to secure their dream luxury spaces in Noida and Delhi NCR.
+              Over the years, Keylo has built an unparalleled reputation for providing a seamless, transparent experience to customers looking to secure their dream luxury spaces in Noida and Delhi NCR.
             </p>
           </div>
         </Reveal>

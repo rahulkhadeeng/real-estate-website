@@ -6,7 +6,7 @@ export const testimonials = [
     unit: "Invested in ACE New Launch 2.0 (Sector 150)",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
     rating: 5,
-    quote: "Grow Infinity Realtors provided flawless clarity when we were looking for a low-density 4 BHK along the Expressway. Their direct builder access secured us the best high-floor corner unit before public allotment."
+    quote: "Keylo provided flawless clarity when we were looking for a low-density 4 BHK along the Expressway. Their direct builder access secured us the best high-floor corner unit before public allotment."
   },
   {
     id: 2,
@@ -24,7 +24,7 @@ export const testimonials = [
     unit: "Purchased at Godrej Crown",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
     rating: 5,
-    quote: "The personalized site visits, unit comparisons, and bespoke negotiation support from Grow Infinity Realtors made our luxury property purchase effortless. Highly recommended!"
+    quote: "The personalized site visits, unit comparisons, and bespoke negotiation support from Keylo made our luxury property purchase effortless. Highly recommended!"
   },
   {
     id: 4,

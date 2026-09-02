@@ -12,7 +12,7 @@ const WhyUs = () => {
         <Reveal animation="fade-up" duration={700}>
           <div className="text-center max-w-2xl mx-auto mb-5">
             <span className="section-tag">Value Proposition</span>
-            <h2 className="section-heading">Why Grow Infinity Realtors?</h2>
+            <h2 className="section-heading">Why Choose Keylo?</h2>
             <p className="text-muted mx-auto" style={{ maxWidth: '650px', fontSize: '1.05rem' }}>
               We bridge the gap between discerning investors and premier real estate developers with transparency, privileged access, and decades of collective market expertise.
             </p>

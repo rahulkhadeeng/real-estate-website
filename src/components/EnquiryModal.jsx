@@ -165,7 +165,7 @@ const EnquiryModal = ({ isOpen, onClose, title = 'Exclusive Showcase' }) => {
                   required
                 />
                 <label className="form-check-label small text-muted" htmlFor="modalAuthCheck" style={{ fontSize: '0.76rem' }}>
-                  I authorize Grow Infinity Representatives to share strategic updates via Call, SMS & WhatsApp channels.
+                  I authorize Keylo Representatives to share strategic updates via Call, SMS & WhatsApp channels.
                 </label>
               </div>
 

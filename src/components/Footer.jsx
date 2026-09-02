@@ -85,8 +85,8 @@ const Footer = ({ onOpenModal }) => {
                 </div>
                 <div className="d-flex align-items-center gap-2">
                   <Mail size={18} className="text-gold flex-shrink-0" />
-                  <a href="mailto:info@growinfinityrealtors.in" className="text-light text-decoration-none hover-white">
-                    info@growinfinityrealtors.in
+                  <a href="mailto:info@keylo.in" className="text-light text-decoration-none hover-white">
+                    info@keylo.in
                   </a>
                 </div>
               </div>

@@ -58,7 +58,7 @@ const ContactSection = () => {
                   <div>
                     <h4 className="h6 fw-bold text-secondary mb-1">Corporate Office</h4>
                     <p className="small text-muted mb-0" style={{ lineHeight: '1.6' }}>
-                      Grow Infinity Realtors, Sector 132, Noida-Greater Noida Expressway, Uttar Pradesh – 201304
+                      Keylo, Sector 132, Noida-Greater Noida Expressway, Uttar Pradesh – 201304
                     </p>
                   </div>
                 </div>
@@ -86,8 +86,8 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="h6 fw-bold text-secondary mb-1">Official Email</h4>
-                    <a href="mailto:info@growinfinityrealtors.in" className="text-decoration-none fw-semibold text-secondary d-block">
-                      info@growinfinityrealtors.in
+                    <a href="mailto:info@keylo.in" className="text-decoration-none fw-semibold text-secondary d-block">
+                      info@keylo.in
                     </a>
                     <small className="text-muted">Replies within 2 business hours</small>
                   </div>
