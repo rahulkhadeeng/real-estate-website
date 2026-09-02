@@ -22,10 +22,10 @@ function App() {
 
   return (
     <Router>
-      <div className="d-flex flex-column min-vh-100 position-relative">
+      <div className="app-wrapper position-relative">
         <Navbar onOpenModal={handleOpenModal} />
         
-        <div className="flex-grow-1">
+        <div className="main-content flex-grow-1">
           <Routes>
             <Route path="/" element={<HomePage onOpenModal={handleOpenModal} />} />
             <Route path="/projects/:slug" element={<ProjectDetailPage onOpenModal={handleOpenModal} />} />

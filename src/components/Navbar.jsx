@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { PhoneCall, Menu, X, ArrowRight } from 'lucide-react';
+import BrandLogo from './common/BrandLogo';
 
 const Navbar = ({ onOpenModal }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,13 +19,15 @@ const Navbar = ({ onOpenModal }) => {
         setScrolled(false);
       }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Check initial position
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleNavClick = (sectionId) => {
     setMobileMenuOpen(false);
-    if (location.pathname !== '/') {
+    if (!isHomePage) {
       navigate('/', { state: { scrollTo: sectionId } });
     } else {
       const el = document.getElementById(sectionId);
@@ -32,15 +37,14 @@ const Navbar = ({ onOpenModal }) => {
     }
   };
 
+  // If not on homepage, always have solid white background
+  const isTransparent = isHomePage && !scrolled;
+
   return (
-    <nav className={`navbar navbar-expand-lg fixed-top navbar-main ${scrolled ? 'shadow-sm' : ''}`}>
+    <nav className={`navbar navbar-expand-lg fixed-top navbar-main ${isTransparent ? 'navbar-transparent' : 'navbar-scrolled'}`}>
       <div className="container py-1">
         <Link to="/" className="navbar-brand d-flex align-items-center me-4">
-          <img
-            src="/assets/grow-logo-DZ4ZPe6W.png"
-            alt="Grow Infinity Realtors"
-            className="navbar-brand-logo"
-          />
+          <BrandLogo height={42} isWhite={isTransparent} />
         </Link>
 
         {/* Mobile menu toggle */}
@@ -50,11 +54,15 @@ const Navbar = ({ onOpenModal }) => {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle navigation"
         >
-          {mobileMenuOpen ? <X size={28} color="#293681" /> : <Menu size={28} color="#293681" />}
+          {mobileMenuOpen ? (
+            <X size={28} color={isTransparent ? '#ffffff' : '#293681'} />
+          ) : (
+            <Menu size={28} color={isTransparent ? '#ffffff' : '#293681'} />
+          )}
         </button>
 
         {/* Desktop Links */}
-        <div className={`collapse navbar-collapse ${mobileMenuOpen ? 'show d-block mt-3 mt-lg-0' : ''}`} id="navbarNav">
+        <div className={`collapse navbar-collapse ${mobileMenuOpen ? 'show d-block mt-3 mt-lg-0 mobile-nav-open' : ''}`} id="navbarNav">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
             <li className="nav-item">
               <button
@@ -115,17 +123,17 @@ const Navbar = ({ onOpenModal }) => {
           </ul>
 
           <div className="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-            <a
+            {/* <a
               href="tel:+919899958739"
-              className="text-decoration-none d-none d-xl-flex align-items-center gap-2 fw-semibold text-secondary"
+              className="text-decoration-none d-none d-xl-flex align-items-center gap-2 fw-semibold nav-phone-link"
               style={{ fontSize: '0.9rem' }}
             >
-              <PhoneCall size={16} className="text-primary-lux" />
-              +91 98999 58739
-            </a>
+              <PhoneCall size={16} className="nav-phone-icon" />
+              <span>+91 98999 58739</span>
+            </a> */}
             <button
               onClick={() => onOpenModal('Request Callback')}
-              className="btn btn-primary-lux w-100 w-lg-auto"
+              className={`btn ${isTransparent ? 'btn-gold-lux' : 'btn-primary-lux'} w-100 w-lg-auto`}
             >
               Request Callback
               <ArrowRight size={16} />
