@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { PhoneCall, Menu, X, ArrowRight } from 'lucide-react';
+import { Menu, X, ArrowRight, User, LogOut, ChevronDown } from 'lucide-react';
 import BrandLogo from './common/BrandLogo';
+import { useAuth } from '../context/AuthContext';
+import '../styles/auth.css';
 
 const Navbar = ({ onOpenModal }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  const { session, isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -23,6 +29,17 @@ const Navbar = ({ onOpenModal }) => {
     // Check initial position
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleNavClick = (sectionId) => {
@@ -123,14 +140,52 @@ const Navbar = ({ onOpenModal }) => {
           </ul>
 
           <div className="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-            {/* <a
-              href="tel:+919899958739"
-              className="text-decoration-none d-none d-xl-flex align-items-center gap-2 fw-semibold nav-phone-link"
-              style={{ fontSize: '0.9rem' }}
-            >
-              <PhoneCall size={16} className="nav-phone-icon" />
-              <span>+91 98999 58739</span>
-            </a> */}
+            {/* Auth Button or User Menu */}
+            {isAuthenticated ? (
+              <div className="nav-user-dropdown" ref={dropdownRef}>
+                <button
+                  type="button"
+                  className="nav-user-btn"
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                >
+                  <div className="nav-avatar-circle">
+                    {session?.name ? session.name.charAt(0).toUpperCase() : session?.email?.charAt(0).toUpperCase() || 'U'}
+                  </div>
+                  <span>{session?.name || session?.email?.split('@')[0]}</span>
+                  <ChevronDown size={14} />
+                </button>
+
+                {userDropdownOpen && (
+                  <div className="nav-user-menu">
+                    <div className="nav-user-menu-header">
+                      <div className="nav-user-menu-name">{session?.name || 'Valued Client'}</div>
+                      <div className="nav-user-menu-email">{session?.email}</div>
+                    </div>
+                    <button
+                      type="button"
+                      className="nav-user-menu-item logout-item"
+                      onClick={() => {
+                        logout();
+                        setUserDropdownOpen(false);
+                      }}
+                    >
+                      <LogOut size={15} />
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className={`btn-auth-nav ${isTransparent ? 'btn-auth-nav-transparent' : 'btn-auth-nav-scrolled'}`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <User size={15} />
+                <span>Sign In</span>
+              </Link>
+            )}
+
             <button
               onClick={() => onOpenModal('Request Callback')}
               className={`btn ${isTransparent ? 'btn-gold-lux' : 'btn-primary-lux'} w-100 w-lg-auto`}
