@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import AuthPage from './pages/AuthPage';
 import { AuthProvider } from './context/AuthContext';
+import { ContentProvider } from './context/ContentContext';
 
 function AppContent() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -57,9 +58,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <ContentProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </ContentProvider>
     </AuthProvider>
   );
 }

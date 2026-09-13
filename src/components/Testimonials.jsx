@@ -1,9 +1,44 @@
-import React from 'react';
-import { Star, Quote, CheckCircle2 } from 'lucide-react';
-import { testimonials } from '../data/testimonialsData';
+import React, { useState } from 'react';
+import { Star, Quote, CheckCircle2, Plus, Edit2, Trash2 } from 'lucide-react';
+import { useContent } from '../context/ContentContext';
+import TestimonialEditModal from './modals/TestimonialEditModal';
 import Reveal from './common/Reveal';
+import '../styles/upload.css';
 
 const Testimonials = () => {
+  const { testimonials, addTestimonial, updateTestimonial, deleteTestimonial, isEditable } = useContent();
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedTestimonial, setSelectedTestimonial] = useState(null);
+
+  const handleCreateNew = () => {
+    setSelectedTestimonial(null);
+    setModalOpen(true);
+  };
+
+  const handleEdit = (testimonial, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedTestimonial(testimonial);
+    setModalOpen(true);
+  };
+
+  const handleDelete = (id, name, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.confirm(`Are you sure you want to delete review from "${name}"?`)) {
+      deleteTestimonial(id);
+    }
+  };
+
+  const handleSave = (testimonialData) => {
+    if (selectedTestimonial?.id) {
+      updateTestimonial(testimonialData);
+    } else {
+      addTestimonial(testimonialData);
+    }
+  };
+
   return (
     <section className="py-5" style={{ background: '#FFFDF1', padding: '95px 0' }}>
       <div className="container">
@@ -14,6 +49,20 @@ const Testimonials = () => {
             <p className="text-muted mx-auto" style={{ maxWidth: '650px', fontSize: '1.05rem' }}>
               Hear firsthand from families and institutional buyers who found their dream residences through Keylo.
             </p>
+
+            {/* Add Testimonial Button for Authenticated Client/Admin */}
+            {isEditable && (
+              <div className="mt-3">
+                <button
+                  type="button"
+                  className="btn-section-add"
+                  onClick={handleCreateNew}
+                >
+                  <Plus size={16} />
+                  <span>Add Client Voice</span>
+                </button>
+              </div>
+            )}
           </div>
         </Reveal>
 
@@ -26,11 +75,33 @@ const Testimonials = () => {
                 duration={750}
                 className="h-100"
               >
-                <div className="testimonial-card">
+                <div className="testimonial-card position-relative">
+                  {/* Floating Edit & Delete Controls for Authenticated Client/Admin */}
+                  {isEditable && (
+                    <div className="admin-card-actions">
+                      <button
+                        type="button"
+                        className="btn-card-action btn-card-edit"
+                        title="Edit Testimonial"
+                        onClick={(e) => handleEdit(item, e)}
+                      >
+                        <Edit2 size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-card-action btn-card-delete"
+                        title="Delete Testimonial"
+                        onClick={(e) => handleDelete(item.id, item.name, e)}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  )}
+
                   <div>
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <div className="d-flex align-items-center gap-1 text-warning">
-                        {[...Array(item.rating)].map((_, i) => (
+                        {[...Array(item.rating || 5)].map((_, i) => (
                           <Star key={i} size={16} fill="#F59E0B" stroke="#F59E0B" />
                         ))}
                       </div>
@@ -47,6 +118,9 @@ const Testimonials = () => {
                       src={item.avatar}
                       alt={item.name}
                       className="testimonial-avatar"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80';
+                      }}
                     />
                     <div>
                       <h5 className="h6 fw-bold text-secondary mb-0 d-flex align-items-center gap-1">
@@ -67,6 +141,14 @@ const Testimonials = () => {
           ))}
         </div>
       </div>
+
+      {/* Testimonial Edit Modal */}
+      <TestimonialEditModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSave={handleSave}
+        testimonial={selectedTestimonial}
+      />
     </section>
   );
 };

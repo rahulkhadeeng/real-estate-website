@@ -1,16 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import { ChevronLeft, ChevronRight, MapPin, ArrowRight, Sparkles, Building } from 'lucide-react';
-import { projects } from '../data/projectsData';
+import { ChevronLeft, ChevronRight, MapPin, ArrowRight, Sparkles, Plus, Edit2, Trash2 } from 'lucide-react';
+import { useContent } from '../context/ContentContext';
+import ProjectEditModal from './modals/ProjectEditModal';
 import Reveal from './common/Reveal';
+import '../styles/upload.css';
 
 const FeaturedProjects = ({ onOpenModal }) => {
+  const { projects, addProject, updateProject, deleteProject, isEditable } = useContent();
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const handleCreateNew = () => {
+    setSelectedProject(null);
+    setModalOpen(true);
+  };
+
+  const handleEdit = (project, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedProject(project);
+    setModalOpen(true);
+  };
+
+  const handleDelete = (id, title, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
+      deleteProject(id);
+    }
+  };
+
+  const handleSave = (projectData) => {
+    if (selectedProject?.id) {
+      updateProject(projectData);
+    } else {
+      addProject(projectData);
+    }
+  };
+
   return (
     <section id="projects" className="py-5" style={{ background: '#FFFDF1', padding: '90px 0' }}>
       <div className="container">
-        {/* Header with Navigation Controls */}
+        {/* Header with Navigation Controls & Admin Add Button */}
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5 gap-3">
           <Reveal animation="fade-right" duration={700}>
             <div>
@@ -24,12 +59,26 @@ const FeaturedProjects = ({ onOpenModal }) => {
 
           <Reveal animation="fade-left" delay={150} duration={700}>
             <div className="d-flex align-items-center gap-3">
-              <button className="proj-nav-btn custom-proj-prev" aria-label="Previous Slide">
-                <ChevronLeft size={22} />
-              </button>
-              <button className="proj-nav-btn custom-proj-next" aria-label="Next Slide">
-                <ChevronRight size={22} />
-              </button>
+              {/* Add New Development Button - Only visible for authenticated Client/Admin */}
+              {isEditable && (
+                <button
+                  type="button"
+                  className="btn-section-add"
+                  onClick={handleCreateNew}
+                >
+                  <Plus size={16} />
+                  <span>Add Development</span>
+                </button>
+              )}
+
+              <div className="d-flex align-items-center gap-2">
+                <button className="proj-nav-btn custom-proj-prev" aria-label="Previous Slide">
+                  <ChevronLeft size={22} />
+                </button>
+                <button className="proj-nav-btn custom-proj-next" aria-label="Next Slide">
+                  <ChevronRight size={22} />
+                </button>
+              </div>
             </div>
           </Reveal>
         </div>
@@ -59,7 +108,29 @@ const FeaturedProjects = ({ onOpenModal }) => {
           >
             {projects.map((project) => (
               <SwiperSlide key={project.id} className="h-auto">
-                <div className="project-card">
+                <div className="project-card position-relative">
+                  {/* Floating Edit & Delete Controls (Only for logged in Client/Admin) */}
+                  {isEditable && (
+                    <div className="admin-card-actions">
+                      <button
+                        type="button"
+                        className="btn-card-action btn-card-edit"
+                        title="Edit Development"
+                        onClick={(e) => handleEdit(project, e)}
+                      >
+                        <Edit2 size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-card-action btn-card-delete"
+                        title="Delete Development"
+                        onClick={(e) => handleDelete(project.id, project.title, e)}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  )}
+
                   <img
                     src={project.bgImage}
                     alt={project.title}
@@ -75,7 +146,7 @@ const FeaturedProjects = ({ onOpenModal }) => {
                     <div className="mb-auto">
                       <span className="badge-lux">
                         <Sparkles size={12} className="text-gold" />
-                        {project.status || project.badge}
+                        {project.status || project.badge || 'Featured'}
                       </span>
                     </div>
 
@@ -113,7 +184,7 @@ const FeaturedProjects = ({ onOpenModal }) => {
                             Enquire
                           </button>
                           <Link
-                            to={`/projects/${project.slug}`}
+                            to={`/projects/${project.slug || project.id}`}
                             className="card-explore-btn"
                           >
                             Details
@@ -132,6 +203,14 @@ const FeaturedProjects = ({ onOpenModal }) => {
           <div className="custom-proj-pagination d-flex justify-content-center mt-3 gap-2"></div>
         </Reveal>
       </div>
+
+      {/* Project Edit & Create Modal */}
+      <ProjectEditModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSave={handleSave}
+        project={selectedProject}
+      />
     </section>
   );
 };
