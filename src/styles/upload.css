@@ -84,7 +84,8 @@
 .dropzone-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  width: 100%;
 }
 
 .dropzone-box {
@@ -94,11 +95,11 @@
   align-items: center;
   justify-content: center;
   padding: 24px 16px;
-  border: 2px dashed #d1d5db;
+  border: 2px dashed #cbd5e1;
   border-radius: 12px;
-  background: #f9fafb;
+  background: #f8fafc;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s ease;
   text-align: center;
 }
 
@@ -106,82 +107,193 @@
 .dropzone-box.drag-active {
   border-color: #293681;
   background: #f0f4ff;
+  box-shadow: 0 0 0 4px rgba(41, 54, 129, 0.08);
+}
+
+.dropzone-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(41, 54, 129, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.dropzone-box:hover .dropzone-icon-circle {
+  transform: scale(1.08);
+  background: rgba(41, 54, 129, 0.15);
 }
 
 .dropzone-icon {
   color: #293681;
-  margin-bottom: 8px;
 }
 
 .dropzone-text {
   font-size: 14px;
   font-weight: 600;
-  color: #374151;
-  margin-bottom: 4px;
+  color: #1e293b;
+  margin-bottom: 3px;
 }
 
 .dropzone-subtext {
   font-size: 12px;
-  color: #6b7280;
+  color: #64748b;
 }
 
+.btn-dropzone-browse {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #293681;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 2px 8px rgba(41, 54, 129, 0.2);
+}
+
+.btn-dropzone-browse:hover {
+  background: #1a255f;
+  transform: translateY(-1px);
+}
+
+/* Dropzone Preview State */
 .dropzone-preview-box {
   position: relative;
   width: 100%;
-  height: 180px;
-  border-radius: 10px;
+  height: 200px;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #e5e7eb;
-  background: #000;
+  border: 1px solid #e2e8f0;
+  background: #0f172a;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.dropzone-preview-box.drag-active {
+  outline: 3px dashed #293681;
+  outline-offset: -3px;
 }
 
 .dropzone-preview-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-.dropzone-remove-btn {
+.dropzone-preview-box:hover .dropzone-preview-img {
+  transform: scale(1.02);
+}
+
+.dropzone-preview-overlay {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  background: rgba(17, 24, 39, 0.85);
-  color: #fff;
-  border: none;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.2) 60%, rgba(15, 23, 42, 0.5) 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 12px;
+  transition: opacity 0.2s ease;
 }
 
-.dropzone-remove-btn:hover {
+.dropzone-preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-dropzone-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.btn-dropzone-change {
+  background: #293681;
+  color: #ffffff;
+}
+
+.btn-dropzone-change:hover {
+  background: #1a255f;
+  color: #cfa859;
+}
+
+.btn-dropzone-edit-url {
+  background: rgba(255, 255, 255, 0.9);
+  color: #1e293b;
+}
+
+.btn-dropzone-edit-url:hover {
+  background: #ffffff;
+}
+
+.btn-dropzone-remove {
+  background: rgba(220, 38, 38, 0.9);
+  color: #ffffff;
+}
+
+.btn-dropzone-remove:hover {
   background: #dc2626;
 }
 
-.dropzone-url-toggle {
+.dropzone-footer-bar {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.dropzone-url-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 12px;
-  color: #4b5563;
+  font-weight: 500;
+  color: #475569;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
+  transition: color 0.15s ease;
+}
+
+.dropzone-url-toggle:hover {
+  color: #293681;
   text-decoration: underline;
-  width: fit-content;
+}
+
+.dropzone-url-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 .dropzone-url-input {
-  width: 100%;
-  height: 40px;
-  border: 1px solid #d1d5db;
+  flex: 1;
+  height: 38px;
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
   padding: 0 12px;
   font-size: 13px;
+  color: #1e293b;
+  background: #ffffff;
 }
 
 .dropzone-url-input:focus {
@@ -190,30 +302,68 @@
   box-shadow: 0 0 0 3px rgba(41, 54, 129, 0.12);
 }
 
-/* Edit Modal Styling */
+.btn-dropzone-url-submit {
+  padding: 0 14px;
+  background: #293681;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-dropzone-url-submit:hover {
+  background: #1a255f;
+}
+
+.dropzone-error-msg {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* Edit Modal Layout & Fix for Scrolling and Pinned Footer */
 .admin-modal-backdrop {
   position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(5px);
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2000;
-  padding: 20px;
+  padding: 16px;
   overflow-y: auto;
 }
 
 .admin-modal-box {
   background: #ffffff;
   width: 100%;
-  max-width: 640px;
+  max-width: 650px;
   border-radius: 16px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: auto;
+}
+
+.admin-modal-box form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 @keyframes modalPop {
@@ -228,11 +378,13 @@
 }
 
 .admin-modal-header {
-  padding: 20px 24px;
+  padding: 18px 24px;
   border-bottom: 1px solid #f1f5f9;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
+  background: #ffffff;
 }
 
 .admin-modal-title {
@@ -243,11 +395,24 @@
 }
 
 .admin-modal-body {
-  padding: 24px;
+  padding: 20px 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.admin-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-modal-body::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
 }
 
 .admin-modal-footer {
@@ -258,6 +423,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .admin-modal-label {

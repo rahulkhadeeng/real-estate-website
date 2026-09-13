@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { UploadCloud, X, Link as LinkIcon, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { UploadCloud, Upload, X, Link as LinkIcon, Loader2, Trash2, Edit3, Image as ImageIcon } from 'lucide-react';
 import '../../styles/upload.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
@@ -39,7 +39,7 @@ const ImageDropzone = ({ value, onChange, label = 'Image' }) => {
 
   const handleFiles = async (file) => {
     if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file (PNG, JPG, WebP, AVIF).');
+      setError('Please select a valid image file (PNG, JPG, WebP, AVIF, SVG).');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -73,7 +73,7 @@ const ImageDropzone = ({ value, onChange, label = 'Image' }) => {
           return;
         }
       }
-      
+
       // Fallback: Read local file as Data URL
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -98,87 +98,158 @@ const ImageDropzone = ({ value, onChange, label = 'Image' }) => {
       onChange(urlInputValue.trim());
       setUrlInputValue('');
       setShowUrlInput(false);
+      setError('');
     }
   };
 
   return (
     <div className="dropzone-container">
+      {/* Hidden file input used for both empty state and replace state */}
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleChange}
+      />
+
       {value ? (
-        <div className="dropzone-preview-box">
+        <div 
+          className={`dropzone-preview-box ${dragActive ? 'drag-active' : ''}`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+        >
           <img src={value} alt="Uploaded preview" className="dropzone-preview-img" />
-          <button
-            type="button"
-            className="dropzone-remove-btn"
-            onClick={() => onChange('')}
-            title="Remove image"
-          >
-            <X size={16} />
-          </button>
-        </div>
-      ) : (
-        <>
-          <div
-            className={`dropzone-box ${dragActive ? 'drag-active' : ''}`}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-            onClick={() => inputRef.current?.click()}
-          >
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-              onChange={handleChange}
-            />
-
-            {uploading ? (
-              <div className="d-flex flex-column align-items-center gap-2 py-2">
-                <Loader2 size={28} className="dropzone-icon animate-spin" />
-                <span className="dropzone-text">Uploading image…</span>
-              </div>
-            ) : (
-              <>
-                <UploadCloud size={28} className="dropzone-icon" />
-                <div className="dropzone-text">Click to upload or drag and drop</div>
-                <div className="dropzone-subtext">SVG, PNG, JPG, WebP or AVIF (max 5MB)</div>
-              </>
-            )}
-          </div>
-
-          <div className="d-flex align-items-center justify-content-between mt-1">
-            <button
-              type="button"
-              className="dropzone-url-toggle"
-              onClick={() => setShowUrlInput(!showUrlInput)}
-            >
-              <LinkIcon size={13} />
-              {showUrlInput ? 'Hide URL input' : 'Or enter image URL'}
-            </button>
-          </div>
-
-          {showUrlInput && (
-            <div className="d-flex gap-2 mt-2">
-              <input
-                type="url"
-                className="dropzone-url-input"
-                placeholder="https://example.com/image.jpg"
-                value={urlInputValue}
-                onChange={(e) => setUrlInputValue(e.target.value)}
-              />
+          
+          {/* Overlay Action Toolbar */}
+          <div className="dropzone-preview-overlay">
+            <div className="dropzone-preview-actions">
               <button
                 type="button"
-                className="btn btn-sm btn-dark px-3"
-                onClick={handleUrlSubmit}
+                className="btn-dropzone-action btn-dropzone-change"
+                onClick={() => inputRef.current?.click()}
+                disabled={uploading}
+                title="Upload new image"
               >
-                Set
+                {uploading ? (
+                  <Loader2 size={13} className="animate-spin" />
+                ) : (
+                  <Upload size={13} />
+                )}
+                <span>Change Image</span>
+              </button>
+
+              <button
+                type="button"
+                className="btn-dropzone-action btn-dropzone-edit-url"
+                onClick={() => {
+                  setUrlInputValue(value.startsWith('data:') ? '' : value);
+                  setShowUrlInput(!showUrlInput);
+                }}
+                title="Edit URL"
+              >
+                <LinkIcon size={13} />
+                <span>URL</span>
+              </button>
+
+              <button
+                type="button"
+                className="btn-dropzone-action btn-dropzone-remove"
+                onClick={() => {
+                  onChange('');
+                  setUrlInputValue('');
+                  setShowUrlInput(false);
+                }}
+                title="Remove image"
+              >
+                <Trash2 size={13} />
+                <span>Remove</span>
               </button>
             </div>
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`dropzone-box ${dragActive ? 'drag-active' : ''}`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+          onClick={() => inputRef.current?.click()}
+        >
+          {uploading ? (
+            <div className="d-flex flex-column align-items-center gap-2 py-3">
+              <Loader2 size={32} className="dropzone-icon animate-spin text-primary-lux" />
+              <span className="dropzone-text">Uploading & processing image…</span>
+            </div>
+          ) : (
+            <>
+              <div className="dropzone-icon-circle">
+                <UploadCloud size={24} className="dropzone-icon" />
+              </div>
+              <div className="dropzone-text">Click to browse or drag & drop</div>
+              <div className="dropzone-subtext">SVG, PNG, JPG, WebP or AVIF (max 5MB)</div>
+              
+              <button
+                type="button"
+                className="btn-dropzone-browse mt-2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  inputRef.current?.click();
+                }}
+              >
+                <Upload size={14} />
+                Browse & Upload Image
+              </button>
+            </>
           )}
+        </div>
+      )}
 
-          {error && <p className="text-danger small mt-1 mb-0">{error}</p>}
-        </>
+      {/* URL Input Toggle / Bar */}
+      <div className="dropzone-footer-bar">
+        <button
+          type="button"
+          className="dropzone-url-toggle"
+          onClick={() => setShowUrlInput(!showUrlInput)}
+        >
+          <LinkIcon size={13} />
+          {showUrlInput ? 'Hide URL input' : value ? 'Replace via Image URL' : 'Or enter image URL'}
+        </button>
+      </div>
+
+      {showUrlInput && (
+        <div className="dropzone-url-form animate-fade-in">
+          <input
+            type="url"
+            className="dropzone-url-input"
+            placeholder="https://images.unsplash.com/photo-..."
+            value={urlInputValue}
+            onChange={(e) => setUrlInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleUrlSubmit(e);
+              }
+            }}
+          />
+          <button
+            type="button"
+            className="btn-dropzone-url-submit"
+            onClick={handleUrlSubmit}
+          >
+            Apply URL
+          </button>
+        </div>
+      )}
+
+      {error && (
+        <div className="dropzone-error-msg">
+          <span>{error}</span>
+          <button type="button" className="btn-close btn-close-white btn-sm" onClick={() => setError('')} aria-label="Dismiss"></button>
+        </div>
       )}
     </div>
   );
